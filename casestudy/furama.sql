@@ -85,6 +85,7 @@ create table hop_dong (
 create table hop_dong_chi_tiet (
 	ma_hop_dong_chi_tiet int primary key auto_increment ,
     ma_hop_dong int references hop_dong(ma_hop_dong),
+    so_luong int,
     ma_dich_vu_di_kem int references dich_vu_di_kem(ma_dich_vu_di_kem)
 );
 
@@ -140,3 +141,128 @@ insert into kieu_thue(ten_kieu_thue) values ("year"), ("month"), ("day"), ("hour
 insert into loai_dich_vu(ten_loai_dich_vu) values ("Villa"), ("House"), ("Room");
 
 
+
+insert into dich_vu(ten_dich_vu,dien_tich,chi_phi_thue,so_nguoi_toi_da,tieu_chuan_phong,mo_ta_tien_nghi_khac,dien_tich_ho_boi,so_tang,dich_vu_mien_phi_di_kem,ma_kieu_thue,ma_loai_dich_vu) values
+('Villa Beach Front',25000,1000000,10,'vip','Có hồ bơi',500,4,null,3,1),('House Princess 01',14000,5000000,7,'vip','Có thêm bếp nướng',null,3,null,2,2),
+('Room Twin 01',5000,1000000,2,'normal','Có tivi',null,null,'1 Xe máy, 1 Xe đạp',4,3),('Villa No Beach Front',22000,9000000,8,'normal','Có hồ bơi',300,3,null,3,1),
+('House Princess 02',10000,4000000,5,'normal','Có thêm bếp nướng',null,2,null,3,2),('Room Twin 02',3000,900000,2,'normal','Có tivi',null,null,'1 Xe máy',4,3);
+
+insert into dich_vu_di_kem(ten_dich_vu_di_kem,gia,don_vi,trang_thai) values 
+('Karaoke',10000,'giờ','tiện nghi, hiện tại'),('Thuê xe máy',10000,'chiếc','hỏng 1 xe'),
+('Thuê xe đạp',20000,'chiếc','tốt'),('Buffet buổi sáng',15000,'suất','đầy đủ đồ ăn, tráng miệng'),
+('Buffet buổi trưa',90000,'suất','đầy đủ đồ ăn, tráng miệng'),('Buffet buổi tối',16000,'suất','đầy đủ đồ ăn, tráng miệng');
+
+insert into hop_dong(ngay_lam_hop_dong,ngay_ket_thuc_hop_dong,tien_dat_coc,ma_nhan_vien,ma_khach_hang,ma_dich_vu) values
+('2020-12-08','2020-12-08',0,3,1,3),('2020-07-14','2020-07-21',200000,7,3,1),
+('2021-03-15','2021-03-17',50000,3,4,2),('2021-01-14','2021-01-18',100000,7,5,5),
+('2021-07-14','2021-07-15',0,7,2,6),('2021-06-01','2021-06-03',0,7,7,6),
+('2021-09-02','2021-09-05',100000,7,4,4),('2021-06-17','2021-06-18',150000,3,4,1),
+('2020-11-19','2020-11-19',0,3,4,3),('2021-04-12','2021-04-14',0,10,3,5),
+('2021-04-25','2021-04-25',0,2,2,1),('2021-05-25','2021-05-27',0,7,10,1);
+
+insert into hop_dong_chi_tiet(so_luong,ma_hop_dong,ma_dich_vu_di_kem) values
+(5,2,4),(8,2,5),(15,2,6),(1,3,1),(11,3,2),(1,1,3),(2,1,2),(2,12,2);
+
+-- SQL CƠ BẢN
+
+-- Câu 2.	Hiển thị thông tin của tất cả nhân viên có trong hệ thống có tên bắt đầu là một trong các ký tự “H”, “T” hoặc “K” và có tối đa 15 kí tự.
+
+select * 
+from nhan_vien 
+where ((ho_ten like "H%") or (ho_ten like "T%") or (ho_ten like "K%"));
+
+select * 
+from nhan_vien 
+where ((ho_ten like "H%") or (ho_ten like "T%") or (ho_ten like "K%")) and length(ho_ten)<=11;
+
+-- Câu 3 
+
+select *
+from khach_hang
+where (timestampdiff(YEAR,ngay_sinh,CURDATE()) between 17 and 51) and (instr(dia_chi,"Quảng Trị") <>0 or instr(dia_chi,"Đà Nẵng") <>0) ;
+
+select ho_ten, timestampdiff(YEAR,ngay_sinh,CURDATE()) as age
+from khach_hang
+where (timestampdiff(YEAR,ngay_sinh,CURDATE()) between 17 and 51) and (instr(dia_chi,"Quảng Trị") <>0 or instr(dia_chi,"Đà Nẵng") <>0) ;
+
+select ho_ten, (datediff(CURDATE(),ngay_sinh)/365.25) as age
+from khach_hang
+where (timestampdiff(YEAR,ngay_sinh,CURDATE()) between 17 and 51) and (instr(dia_chi,"Quảng Trị") <>0 or instr(dia_chi,"Đà Nẵng") <>0) 
+order by age desc; 
+
+
+-- Câu 4
+
+select k.ho_ten, count(h.ma_hop_dong) as so_hop_dong , l.ten_loai_khach
+from hop_dong h
+join khach_hang k on k.ma_khach_hang = h.ma_khach_hang
+join loai_khach l on k.ma_loai_khach = l.ma_loai_khach
+group by h.ma_khach_hang
+having l.ten_loai_khach = "Diamond"
+order by so_hop_dong desc;
+
+
+-- câu 5
+select k.ma_khach_hang, k.ho_ten, h.ma_hop_dong  , d.ten_dich_vu, d.chi_phi_thue as chi_phi_thue, dk.ten_dich_vu_di_kem
+from khach_hang k
+left join hop_dong h on h.ma_khach_hang = k.ma_khach_hang
+left join hop_dong_chi_tiet hc on hc.ma_hop_dong = h.ma_hop_dong
+left join dich_vu d on d.ma_dich_vu = h.ma_dich_vu
+left join dich_vu_di_kem dk on dk.ma_dich_vu_di_kem = hc.ma_dich_vu_di_kem
+;
+
+select k.ma_khach_hang, k.ho_ten, h.ma_hop_dong, h.ngay_lam_hop_dong, d.ten_dich_vu, d.chi_phi_thue as chi_phi_thue, 
+	group_concat(dk.ten_dich_vu_di_kem separator ",") as dich_vu_kem_theo, sum(dk.gia*hc.so_luong)+chi_phi_thue as tong_chi_phi
+from khach_hang k
+left join hop_dong h on h.ma_khach_hang = k.ma_khach_hang
+left join hop_dong_chi_tiet hc on hc.ma_hop_dong = h.ma_hop_dong
+left join dich_vu d on d.ma_dich_vu = h.ma_dich_vu
+left join dich_vu_di_kem dk on dk.ma_dich_vu_di_kem = hc.ma_dich_vu_di_kem
+group by h.ma_hop_dong
+;
+
+
+select k.ma_khach_hang, k.ho_ten, lk.ten_loai_khach, h.ma_hop_dong, h.ngay_lam_hop_dong, d.ten_dich_vu, 
+	group_concat(dk.ten_dich_vu_di_kem separator ",") as dich_vu_kem_theo, sum(dk.gia*hc.so_luong)+chi_phi_thue as tong_chi_phi
+from khach_hang k
+left join hop_dong h on h.ma_khach_hang = k.ma_khach_hang
+left join hop_dong_chi_tiet hc on hc.ma_hop_dong = h.ma_hop_dong
+left join dich_vu d on d.ma_dich_vu = h.ma_dich_vu
+left join dich_vu_di_kem dk on dk.ma_dich_vu_di_kem = hc.ma_dich_vu_di_kem
+left join loai_khach lk on lk.ma_loai_khach = k.ma_loai_khach
+group by h.ma_hop_dong;
+
+-- Câu 6
+select d.ma_dich_vu,d.ten_dich_vu, d.chi_phi_thue,d.dien_tich, l.ten_loai_dich_vu
+from dich_vu d
+left join hop_dong h on d.ma_dich_vu = h.ma_dich_vu
+left join loai_dich_vu l on l.ma_loai_dich_vu = d.ma_loai_dich_vu 
+where h.ngay_lam_hop_dong not between "2021-03-31" and current_date()
+group by d.ma_dich_vu ;
+
+
+-- Câu 7
+
+select d.ma_dich_vu,d.ten_dich_vu, d.chi_phi_thue,d.dien_tich, l.ten_loai_dich_vu, h.ngay_lam_hop_dong
+from dich_vu d
+left join hop_dong h on d.ma_dich_vu = h.ma_dich_vu
+left join loai_dich_vu l on l.ma_loai_dich_vu = d.ma_loai_dich_vu 
+;
+
+SELECT dich_vu.ma_dich_vu, dich_vu.ten_dich_vu, dich_vu.dien_tich, dich_vu.chi_phi_thue, loai_dich_vu.ten_loai_dich_vu,dich_vu.so_nguoi_toi_da
+from dich_vu
+left JOIN loai_dich_vu ON dich_vu.ma_loai_dich_vu = loai_dich_vu.ma_loai_dich_vu
+WHERE  dich_vu.ma_dich_vu in (
+        SELECT distinct ma_dich_vu
+        FROM hop_dong
+        WHERE YEAR(hop_dong.ngay_lam_hop_dong) = 2020
+)
+and dich_vu.ma_dich_vu not in (
+        SELECT distinct ma_dich_vu
+        FROM hop_dong
+        WHERE YEAR(hop_dong.ngay_lam_hop_dong) = 2021
+) ;
+
+-- Câu 8
+select distinct k.ho_ten
+from khach_hang k;
