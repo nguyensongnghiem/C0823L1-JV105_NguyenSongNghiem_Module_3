@@ -117,8 +117,10 @@ insert into nhan_vien(ho_ten, ngay_sinh, so_cmnd, luong, so_dien_thoai, email, d
 ("Nguyễn Hà Đông","1989-09-03","234414123",9000000,"0642123111","donghanguyen@gmail.com","213 Hàm Nghi, Đà Nẵng",2,4,4),
 ("Tòng Hoang","1982-09-03","256781231",6000000,"0245144444","hoangtong@gmail.com","111 Hùng Vương, Hà Nội",2,4,4),
 ("Nguyễn Công Đạo","1994-01-08","755434343",8000000,"0988767111","nguyencongdao12@gmail.com","6 Hoà Khánh, Đồng Nai",2,3,2)
-;
 
+;
+insert into nhan_vien(ho_ten, ngay_sinh, so_cmnd, luong, so_dien_thoai, email, dia_chi, ma_vi_tri, ma_trinh_do, ma_bo_Phan) values 
+("Võ Công Toản","1980-04-04","123231365",17000000,"0374443232","toan0404@gmail.com","77 Hoàng Diệu, Quảng Trị",1,4,4);
 -- loai_khach
 insert into loai_khach(ten_loai_khach) values ("Diamond"), ("Platinium"), ("Gold"), ("Silver"), ("Member");
 
@@ -266,3 +268,129 @@ and dich_vu.ma_dich_vu not in (
 -- Câu 8
 select distinct k.ho_ten
 from khach_hang k;
+
+-- câu 11 
+
+select dk.ma_dich_vu_di_kem, dk.ten_dich_vu_di_kem 
+from khach_hang k
+join loai_khach l on k.ma_loai_khach = l.ma_loai_khach
+join hop_dong h on h.ma_khach_hang = k.ma_khach_hang
+join hop_dong_chi_tiet hc on hc.ma_hop_dong = h.ma_hop_dong
+join dich_vu_di_kem dk on dk.ma_dich_vu_di_kem = hc.ma_dich_vu_di_kem
+where (l.ten_loai_khach = "Diamond" and (k.dia_chi like "%Vinh%" or k.dia_chi like "%Quảng Ngãi%"))
+group by dk.ma_dich_vu_di_kem
+;
+
+-- Câu 12 
+select h.ma_hop_dong, h.ngay_lam_hop_dong,  n.ho_ten as ho_ten_nv , k.ho_ten as ho_ten_khach_hang , k.so_dien_thoai as sdt_kh , d.ten_dich_vu, sum(hc.so_luong)
+from hop_dong h 
+left join hop_dong_chi_tiet hc on hc.ma_hop_dong = h.ma_hop_dong
+left join nhan_vien n on h.ma_nhan_vien = n.ma_nhan_vien 
+left join khach_hang k on k.ma_khach_hang = h.ma_khach_hang
+left join dich_vu d on d.ma_dich_vu = h.ma_dich_vu
+left join dich_vu_di_kem dk on dk.ma_dich_vu_di_kem = hc.ma_dich_vu_di_kem
+ group by h.ma_dich_vu
+ having year(h.ngay_lam_hop_dong) = 2021
+;
+
+select h.ma_hop_dong, n.ho_ten,  h.ngay_lam_hop_dong, d.ten_dich_vu, sum(hc.so_luong)
+from hop_dong h 
+left join nhan_vien n on n.ma_nhan_vien = h.ma_nhan_vien
+left join hop_dong_chi_tiet hc on hc.ma_hop_dong = h.ma_hop_dong
+left join dich_vu d on d.ma_dich_vu = h.ma_dich_vu
+left join dich_vu_di_kem dk on dk.ma_dich_vu_di_kem = hc.ma_dich_vu_di_kem
+ group by h.ma_hop_dong
+ having h.ma_hop_dong in (select h.ma_hop_dong 
+   from hop_dong h where (year(h.ngay_lam_hop_dong) = 2020 and month(h.ngay_lam_hop_dong) in (10,11,12)))
+   and h.ma_hop_dong not in (select h.ma_hop_dong 
+    from hop_dong h where (year(h.ngay_lam_hop_dong) = 2021 and month(h.ngay_lam_hop_dong) in (1,2,3,4,5,6)))
+ ;
+
+select h.ma_hop_dong 
+    from hop_dong h where (year(h.ngay_lam_hop_dong) = 2020 and month(h.ngay_lam_hop_dong) in (10,11,12));
+    
+select h.ma_hop_dong 
+    from hop_dong h where (year(h.ngay_lam_hop_dong) = 2021 and month(h.ngay_lam_hop_dong) in (1,2,3,4,5,6));
+
+-- Câu 13
+select dk.ten_dich_vu_di_kem, sum(hc.so_luong) as tong_so_luong
+from dich_vu_di_kem dk 
+join hop_dong_chi_tiet hc on hc.ma_dich_vu_di_kem = dk.ma_dich_vu_di_kem
+group by dk.ma_dich_vu_di_kem
+having tong_so_luong = (select sum(hc.so_luong) as tong_so_luong
+	from dich_vu_di_kem dk 
+	join hop_dong_chi_tiet hc on hc.ma_dich_vu_di_kem = dk.ma_dich_vu_di_kem
+	group by dk.ma_dich_vu_di_kem 
+	order by tong_so_luong desc
+	limit 1 ) 
+;
+
+-- Câu 14
+select h.ma_hop_dong, l.ten_loai_dich_vu,  dk.ten_dich_vu_di_kem as ten_dv_di_kem, count(hc.ma_dich_vu_di_kem) as so_lan_su_dung
+from hop_dong_chi_tiet hc 
+join dich_vu_di_kem dk on hc.ma_dich_vu_di_kem = dk.ma_dich_vu_di_kem
+join hop_dong h on h.ma_hop_dong = hc.ma_hop_dong
+join dich_vu d on d.ma_dich_vu = h.ma_dich_vu
+join loai_dich_vu l on l.ma_loai_dich_vu = d.ma_loai_dich_vu
+group by dk.ten_dich_vu_di_kem
+having so_lan_su_dung = 1;
+
+-- Câu 15
+
+select n.ma_nhan_vien, n.ho_ten, n.so_dien_thoai, t.ten_trinh_do, count(h.ma_hop_dong)
+from nhan_vien n
+join hop_dong h on h.ma_nhan_vien = n.ma_nhan_vien
+join trinh_do t on n.ma_trinh_do = t.ma_trinh_do
+where year(h.ngay_lam_hop_dong) in (2021,2020)
+group by n.ho_ten
+having count(h.ma_hop_dong) < 3
+;
+
+-- Câu 16 
+select n.ma_nhan_vien, n.ho_ten, n.so_dien_thoai, t.ten_trinh_do, h.ma_hop_dong, year(h.ngay_lam_hop_dong)
+from nhan_vien n
+left join hop_dong h on h.ma_nhan_vien = n.ma_nhan_vien
+left join trinh_do t on n.ma_trinh_do = t.ma_trinh_do
+where year(h.ngay_lam_hop_dong) not in (2021,2020,2021)  or year(h.ngay_lam_hop_dong) is null
+group by n.ma_nhan_vien
+;
+-- chọn các nhân viên cần xóa 
+select n.ma_nhan_vien
+from nhan_vien n
+left join hop_dong h on h.ma_nhan_vien = n.ma_nhan_vien
+left join trinh_do t on n.ma_trinh_do = t.ma_trinh_do
+where year(h.ngay_lam_hop_dong) not in (2021,2020,2021)  or year(h.ngay_lam_hop_dong) is null
+group by n.ma_nhan_vien
+;
+
+delete from nhan_vien
+where nhan_vien.ma_nhan_vien in (select n.ma_nhan_vien
+from nhan_vien n
+left join hop_dong h on h.ma_nhan_vien = n.ma_nhan_vien
+left join trinh_do t on n.ma_trinh_do = t.ma_trinh_do
+where year(h.ngay_lam_hop_dong) not in (2021,2020,2021)  or year(h.ngay_lam_hop_dong) is null
+group by n.ma_nhan_vien)
+;
+
+-- Câu 17
+select k.ma_khach_hang, k.ho_ten, sum(d.chi_phi_thue) + sum(hc.so_luong * dk.gia) as tong_chi_phi
+from khach_hang k 
+join hop_dong h on h.ma_khach_hang = k.ma_khach_hang
+join hop_dong_chi_tiet hc on hc.ma_hop_dong = h.ma_hop_dong
+join dich_vu d on d.ma_dich_vu = h.ma_dich_vu
+join dich_vu_di_kem dk  on dk.ma_dich_vu_di_kem = hc.ma_dich_vu_di_kem
+-- where year(h.ngay_lam_hop_dong) = 2021
+-- group by k.ma_khach_hang
+-- having tong_chi_phi>10000000
+;
+
+select k.ma_khach_hang, k.ho_ten, h.ma_hop_dong, d.chi_phi_thue, hc.ma_hop_dong_chi_tiet,  hc.so_luong,dk.gia, sum(hc.so_luong*dk.gia) + d.chi_phi_thue  as cpdk
+from khach_hang k 
+join hop_dong h on h.ma_khach_hang = k.ma_khach_hang
+join hop_dong_chi_tiet hc on hc.ma_hop_dong = h.ma_hop_dong
+join dich_vu d on d.ma_dich_vu = h.ma_dich_vu
+join dich_vu_di_kem dk  on dk.ma_dich_vu_di_kem = hc.ma_dich_vu_di_kem
+where year(h.ngay_lam_hop_dong) = 2021
+group by h.ma_khach_hang
+-- having tong_chi_phi>10000000
+;
