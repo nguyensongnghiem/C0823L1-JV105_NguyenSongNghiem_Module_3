@@ -18,10 +18,8 @@
           rel="stylesheet">
 </head>
 <body>
-<header class="header grid-container">
-    <h5 class="brand-name">
-        <img src="logo.png" alt="MobiFone"/>
-    </h5>
+<header>
+    <img src="logo.png" alt="MobiFone"/>
     <nav class="nav">
         <ul>
             <li><a href="#">Home</a></li>
@@ -85,8 +83,9 @@
 </footer>
 </body>
 <script>
-    google.charts.load('current',{packages:['corechart']});
+    google.charts.load('current', {packages: ['corechart']});
     google.charts.setOnLoadCallback(drawChart);
+
     function drawChart() {
         ;
         // Set Data
@@ -102,8 +101,8 @@
 // Set Options
         const options = {
             title: 'World Wide Wine Production',
-            'width':"100%",
-            'height':100
+            'width': "100%",
+            'height': 100
         };
 
 // Draw
