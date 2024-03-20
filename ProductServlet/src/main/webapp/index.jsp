@@ -9,7 +9,7 @@
 <h1><%= "Hello World!" %>
 </h1>
 <br/>
-<%--<c:redirect url="/product"></c:redirect>--%>
+<c:redirect url="/product"></c:redirect>
 <a href="hello-servlet">Hello Servlet</a>
 </body>
 </html>

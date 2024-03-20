@@ -1,27 +1,31 @@
 package controller;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
+import model.Product;
 import service.IProductService;
 import service.ProductService;
 
+import java.io.*;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.*;
+import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.List;
 
-@WebServlet (name = "ProductServlet",value = "/product")
+@WebServlet(name = "ProductServlet",value = "/product")
 public class ProductServlet extends HttpServlet {
     private IProductService productService = new ProductService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter writer = resp.getWriter();
-        writer.println("");
-        Date today = new Date();
-        writer.println("<h1>"+ today + "</h1>");
+        List<Product> products = productService.findAll();
+        req.setAttribute("products", products);
+        RequestDispatcher rd =req.getRequestDispatcher("/view/list.jsp");
+        rd.forward(req,resp);
+
     }
 
     @Override
