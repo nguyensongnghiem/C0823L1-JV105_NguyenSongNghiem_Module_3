@@ -41,7 +41,12 @@ public class ProductRepository implements IProductRepository {
     }
     @Override
     public boolean deleteById(int id) {
-        return false;
+        boolean result = false;
+        if (findById(id) != null) {
+            products.remove(findById(id));
+            result = true;
+        }
+        return result;
     }
 
     @Override
