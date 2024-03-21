@@ -9,7 +9,8 @@
 <h1><%= "Hello World!" %>
 </h1>
 <br/>
-<c:redirect url="/product?action=list"></c:redirect>
+<c:redirect url="/student"></c:redirect>
+
 <a href="hello-servlet">Hello Servlet</a>
 </body>
 </html>

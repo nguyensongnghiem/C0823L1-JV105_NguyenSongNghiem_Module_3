@@ -17,21 +17,22 @@
 <html>
 <head>
     <title>Add product</title>
-    <form action="/add" method="post">
-        <div class="form-group">
-            <label for="name" class="form-label">Tên sản phầm</label>
-            <input type="text" id="name" class="form-control">
-        </div>
+    <form action="/product?action=add" method="post" class="w-50 p-5">
+        <%--@declare id="id"--%><label for="id"  class="form-label">Id</label>
+        <input type="text" id = "id" name="id" class="form-control">
+        <br>
+        <label for="name" class="form-label">Tên sản phầm</label>
+        <input type="text" id = "name" name="name" class="form-control">
+        <br>
         <label for="price" class="form-label">Giá</label>
-        <input type="text" id="price" class="form-control">
+        <input type="text" id = "price"  name="price" class="form-control">
         <br>
-        <label for="price" class="form-label">Mô tả</label>
-        <input type="text" id="description" class="form-control">
+        <label for="desc" class="form-label">Mô tả</label>
+        <input type="text" id = "desc" name="desc" class="form-control">
         <br>
-        <label for="price" class="form-label">Hãng sản xuất</label>
-        <input type="text" id="manufactor" class="form-control">
-        <a href="/hello-servlet" class="btn btn-success">Thêm mới </a>
-
+        <label for="manufactor" class="form-label">Hãng sản xuất</label>
+        <input type="text" id = "manufactor" name="manufactor" class="form-control">
+        <button class="btn btn-success" type="submit">Thêm mới</button>
     </form>
 </head>
 <body>
