@@ -13,29 +13,38 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
             crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <html>
-<head>
-    <title>Add product</title>
-    <form action="/product?action=add" method="post" class="w-50 p-5">
-        <%--@declare id="id"--%><label for="id"  class="form-label">Id</label>
-        <input type="text" id = "id" name="id" class="form-control">
-        <br>
-        <label for="name" class="form-label">Tên sản phầm</label>
-        <input type="text" id = "name" name="name" class="form-control">
-        <br>
-        <label for="price" class="form-label">Giá</label>
-        <input type="text" id = "price"  name="price" class="form-control">
-        <br>
-        <label for="desc" class="form-label">Mô tả</label>
-        <input type="text" id = "desc" name="desc" class="form-control">
-        <br>
-        <label for="manufactor" class="form-label">Hãng sản xuất</label>
-        <input type="text" id = "manufactor" name="manufactor" class="form-control">
+
+
+<body>
+<div class="ml-5">
+    <h1>Add product</h1>
+    <form action="/product?action=add" method="post" class="w-50">
+        <div class="input-group">
+            <label for="id" class="form-label">Id</label>
+            <input type="text" id="id" name="id" class="form-control">
+        </div>
+        <div class="input-group">
+            <label for="name" class="form-label">Tên sản phầm</label>
+            <input type="text" id="name" name="name" class="form-control">
+        </div>
+
+        <div class="input-group">
+            <label for="price" class="form-label">Giá</label>
+            <input type="text" id="price" name="price" class="form-control">
+        </div>
+        <div class="input-group">
+            <label for="desc" class="form-label">Mô tả</label>
+            <input type="text" id="desc" name="desc" class="form-control">
+        </div>
+        <div class="input-group">
+            <label for="manufactor" class="form-label">Hãng sản xuất</label>
+            <input type="text" id="manufactor" name="manufactor" class="form-control">
+        </div>
         <button class="btn btn-success" type="submit">Thêm mới</button>
     </form>
-</head>
-<body>
-
+</div>
 </body>
 </html>

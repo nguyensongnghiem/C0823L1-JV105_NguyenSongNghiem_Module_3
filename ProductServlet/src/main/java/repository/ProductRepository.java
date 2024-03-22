@@ -2,10 +2,19 @@ package repository;
 
 import model.Product;
 
+import java.math.BigDecimal;
+import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductRepository implements IProductRepository {
+    private final static String GET_ALL = "SELECT * FROM product";
+    private final static String GET_BY_ID = "SELECT * FROM product WHERE id = '?'";
+    private final static String SAVE = "INSERT INTO product(id,name,price,description,manufactor) VALUE (?,?,?,?,?)";
+
+
     private static List<Product> products = new ArrayList<>();
     static {
         products.add(new Product(1,"Macbook", 1000f, "Laptop ", "Apple"));
@@ -15,7 +24,25 @@ public class ProductRepository implements IProductRepository {
     }
     @Override
     public List<Product> findAll() {
-        return products;
+        List<Product> productList = new ArrayList<>();
+        Connection conn = ConnectDB.getConnectDB();
+
+        try {
+            PreparedStatement preparedStatement =  conn.prepareStatement(GET_ALL);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                float price = resultSet.getFloat("price");
+                String desc = resultSet.getString("description");
+                String manufactor = resultSet.getString("manufactor");
+                productList.add(new Product(id,name,price,desc,manufactor));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return productList;
     }
 
     @Override

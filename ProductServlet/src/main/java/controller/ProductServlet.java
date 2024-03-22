@@ -42,7 +42,23 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp);
+        String action = req.getParameter("action");
+        if (action == null) action = "";
+        switch (action) {
+            case "add":
+                add(req, resp);
+                break;
+            case "delete":
+                delete(req, resp);
+                break;
+            case "update":
+                break;
+            case "list":
+                showList(req, resp);
+                break;
+            default:
+                showList(req, resp);
+        }
 
     }
 
@@ -62,9 +78,11 @@ public class ProductServlet extends HttpServlet {
         resp.sendRedirect("/product?action=list");
         return productService.add(new Product(id, name, price, desc, manufactor));
     }
-    private boolean delete(HttpServletRequest req, HttpServletResponse resp) {
-
+    private boolean delete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+//        System.out.println(req.getParameter("deleteId"));
         int deleteId = Integer.parseInt(req.getParameter("deleteId"));
+
+        resp.sendRedirect("/product?action=list");
         return productService.deleteById(deleteId);
     }
 }
