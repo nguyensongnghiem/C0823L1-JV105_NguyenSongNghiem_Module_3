@@ -5,14 +5,11 @@ import model.Product;
 import service.IProductService;
 import service.ProductService;
 
-import java.io.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
 import java.util.List;
 
 @WebServlet(name = "ProductServlet", value = "/product")
@@ -25,12 +22,16 @@ public class ProductServlet extends HttpServlet {
         if (action == null) action = "";
         switch (action) {
             case "add":
-                add(req, resp);
+                showAddForm(req, resp);
                 break;
             case "delete":
-                delete(req, resp);
+                deleteById(req, resp);
                 break;
-            case "update":
+            case "edit":
+                showEditForm(req,resp);
+                break;
+            case "search":
+                search(req,resp);
                 break;
             case "list":
                 showList(req, resp);
@@ -38,6 +39,22 @@ public class ProductServlet extends HttpServlet {
             default:
                 showList(req, resp);
         }
+    }
+
+    private void search(HttpServletRequest req, HttpServletResponse resp) {
+
+    }
+
+    private void showEditForm(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        int editId = Integer.parseInt(req.getParameter("editId"));
+        Product product = productService.findById(editId);
+        req.setAttribute("product", product);
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/view/edit.jsp");
+        requestDispatcher.forward(req,resp);
+    }
+
+    private void showAddForm(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.sendRedirect("/view/add.jsp");
     }
 
     @Override
@@ -49,9 +66,13 @@ public class ProductServlet extends HttpServlet {
                 add(req, resp);
                 break;
             case "delete":
-                delete(req, resp);
+                deleteById(req, resp);
                 break;
-            case "update":
+            case "edit":
+                update(req, resp);
+                break;
+            case "search":
+                search(req,resp);
                 break;
             case "list":
                 showList(req, resp);
@@ -59,7 +80,16 @@ public class ProductServlet extends HttpServlet {
             default:
                 showList(req, resp);
         }
+    }
 
+    private boolean update(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        String name = req.getParameter("name");
+        float price = Float.parseFloat(req.getParameter("price"));
+        String desc = req.getParameter("desc");
+        String manufactor = req.getParameter("manufactor");
+        resp.sendRedirect("/product?action=list");
+        return productService.update(new Product(id, name, price, desc, manufactor));
     }
 
     private void showList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -69,19 +99,19 @@ public class ProductServlet extends HttpServlet {
         rd.forward(req, resp);
     }
 
-    private boolean add(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void add(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         int id = Integer.parseInt(req.getParameter("id"));
         String name = req.getParameter("name");
         float price = Float.parseFloat(req.getParameter("price"));
         String desc = req.getParameter("desc");
         String manufactor = req.getParameter("manufactor");
-        resp.sendRedirect("/product?action=list");
-        return productService.add(new Product(id, name, price, desc, manufactor));
+        boolean isOk = productService.add(new Product(id, name, price, desc, manufactor));
+        String message = isOk?"OK":"NOK";
+        resp.sendRedirect("/product?action=list&addMess="+message);
     }
-    private boolean delete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private boolean deleteById(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 //        System.out.println(req.getParameter("deleteId"));
         int deleteId = Integer.parseInt(req.getParameter("deleteId"));
-
         resp.sendRedirect("/product?action=list");
         return productService.deleteById(deleteId);
     }

@@ -8,8 +8,8 @@ import java.util.concurrent.Executor;
 public class ConnectDB {
     private final static String URL = "jdbc:mysql://localhost:3306/product";
     private final static String USER = "root";
-    private final static String PASS = "";
-    public static Connection getConnectDB(){
+    private final static String PASS = "root";
+    public static Connection getConnectDB() throws SQLException {
         Connection connection = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
