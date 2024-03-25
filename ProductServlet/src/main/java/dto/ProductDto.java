@@ -1,29 +1,20 @@
-package model;
+package dto;
 
-public class Product {
-    private int id ;
+public class ProductDto {
+private int id;
     private String name;
-    private float  price;
+    private float price;
     private String description;
-    private int manufactor;
+    private String manufactor;
 
-    public Product() {
+    public ProductDto() {
     }
 
-    public Product(int id, String name, float price, String description, int manufactor) {
-        this.id = id;
+    public ProductDto(int id, String name, float price, String description, String manufactor) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.manufactor = manufactor;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -50,11 +41,11 @@ public class Product {
         this.description = description;
     }
 
-    public int getManufactor() {
+    public String getManufactor() {
         return manufactor;
     }
 
-    public void setManufactor(int manufactor) {
+    public void setManufactor(String manufactor) {
         this.manufactor = manufactor;
     }
 }

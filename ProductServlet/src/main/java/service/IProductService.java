@@ -1,11 +1,13 @@
 package service;
 
+import dto.ProductDto;
 import model.Product;
 
 import java.util.List;
 
 public interface IProductService {
     public List<Product> findAll();
+    public List<ProductDto> findAllDto();
     public List<Product> search(String name, String manufactor);
 
     public Product findById(int id);

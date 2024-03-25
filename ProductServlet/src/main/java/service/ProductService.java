@@ -1,5 +1,6 @@
 package service;
 
+import dto.ProductDto;
 import model.Product;
 import repository.IProductRepository;
 import repository.ProductRepository;
@@ -7,6 +8,11 @@ import repository.ProductRepository;
 import java.util.List;
 
 public class ProductService implements IProductService{
+    @Override
+    public List<ProductDto> findAllDto() {
+        return productRepository.findAllDto();
+    }
+
     private IProductRepository productRepository = new ProductRepository();
     @Override
     public List<Product> findAll() {

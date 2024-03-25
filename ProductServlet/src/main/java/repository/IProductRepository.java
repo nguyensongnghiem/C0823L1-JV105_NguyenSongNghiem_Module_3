@@ -1,11 +1,13 @@
 package repository;
 
+import dto.ProductDto;
 import model.Product;
 
 import java.util.List;
 
 public interface IProductRepository {
     public List<Product> findAll();
+    public List<ProductDto> findAllDto();
 
     public Product findById(int id);
 

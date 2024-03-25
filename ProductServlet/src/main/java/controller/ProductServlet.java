@@ -1,6 +1,7 @@
 package controller;
 
 
+import dto.ProductDto;
 import model.Product;
 import service.IProductService;
 import service.ProductService;
@@ -52,7 +53,6 @@ public class ProductServlet extends HttpServlet {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/view/edit.jsp");
         requestDispatcher.forward(req,resp);
     }
-
     private void showAddForm(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.sendRedirect("/view/add.jsp");
     }
@@ -87,13 +87,13 @@ public class ProductServlet extends HttpServlet {
         String name = req.getParameter("name");
         float price = Float.parseFloat(req.getParameter("price"));
         String desc = req.getParameter("desc");
-        String manufactor = req.getParameter("manufactor");
+        int manufactor = Integer.parseInt(req.getParameter("manufactor"));
         resp.sendRedirect("/product?action=list");
         return productService.update(new Product(id, name, price, desc, manufactor));
     }
 
     private void showList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Product> products = productService.findAll();
+        List<ProductDto> products = productService.findAllDto();
         req.setAttribute("products", products);
         RequestDispatcher rd = req.getRequestDispatcher("/view/list.jsp");
         rd.forward(req, resp);
@@ -104,7 +104,7 @@ public class ProductServlet extends HttpServlet {
         String name = req.getParameter("name");
         float price = Float.parseFloat(req.getParameter("price"));
         String desc = req.getParameter("desc");
-        String manufactor = req.getParameter("manufactor");
+        int manufactor = Integer.parseInt(req.getParameter("manufactor"));
         boolean isOk = productService.add(new Product(id, name, price, desc, manufactor));
         String message = isOk?"OK":"NOK";
         resp.sendRedirect("/product?action=list&addMess="+message);
