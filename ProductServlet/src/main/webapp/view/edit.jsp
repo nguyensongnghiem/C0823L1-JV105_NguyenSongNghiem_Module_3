@@ -59,7 +59,6 @@
         }
         form.classList.add("was-validated")
     })
-
 </script>
 
 

@@ -11,6 +11,8 @@ import java.util.List;
 
 public class ManufactorRepsitory implements IManufactorRepository {
     private final static String GET_ALL = "SELECT * FROM manufactor";
+    private final static String FIND_BY_NAME = "SELECT * FROM ? WHERE name=?";
+    private final static String SAVE = "INSERT INTO manufactor(id,name) VALUE (?,?)";
 
     @Override
     public List<Manufactor> findAll() {
@@ -34,6 +36,57 @@ public class ManufactorRepsitory implements IManufactorRepository {
             throw new RuntimeException(e);
         }
         return manufactorsList;
+    }
+
+    @Override
+    public Manufactor findByName(String name) {
+        Connection conn = null;
+        Manufactor found = null;
+        try {
+            conn = ConnectDB.getConnectDB();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(FIND_BY_NAME);
+            preparedStatement.setString(1,"product");
+            preparedStatement.setString(2,"name");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                found = new Manufactor(id, name);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return found;
+    }
+
+    @Override
+    public boolean save(Manufactor manufactor) {
+        Connection conn = null;
+        int rowEffected = 0;
+        try {
+            conn = ConnectDB.getConnectDB();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            PreparedStatement preparedStatement =  conn.prepareStatement(SAVE);
+            preparedStatement.setInt(1, "null");
+            preparedStatement.setString(2, manufactor.getName());
+            rowEffected = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            return false;
+        }finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return rowEffected>0;
     }
 }
 

@@ -2,8 +2,11 @@ package controller;
 
 
 import dto.ProductDto;
+import model.Manufactor;
 import model.Product;
+import service.IManufactorService;
 import service.IProductService;
+import service.ManufactorService;
 import service.ProductService;
 
 import javax.servlet.RequestDispatcher;
@@ -16,6 +19,7 @@ import java.util.List;
 @WebServlet(name = "ProductServlet", value = "/product")
 public class ProductServlet extends HttpServlet {
     private IProductService productService = new ProductService();
+    private IManufactorService manufactorService = new ManufactorService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -87,7 +91,15 @@ public class ProductServlet extends HttpServlet {
         String name = req.getParameter("name");
         float price = Float.parseFloat(req.getParameter("price"));
         String desc = req.getParameter("desc");
-        int manufactor = Integer.parseInt(req.getParameter("manufactor"));
+        String manufactorName = req.getParameter("manufactor");
+        if (manufactorService.findByName(manufactorName)== null) {
+            Manufactor manufactor = new Manufactor();
+            manufactor.setId(null);
+            manufactorService.save(manufactorName);
+        }
+        else
+
+
         resp.sendRedirect("/product?action=list");
         return productService.update(new Product(id, name, price, desc, manufactor));
     }

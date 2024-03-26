@@ -1,7 +1,8 @@
 package dto;
 
 public class ProductDto {
-private int id;
+
+    private int id;
     private String name;
     private float price;
     private String description;
@@ -11,10 +12,19 @@ private int id;
     }
 
     public ProductDto(int id, String name, float price, String description, String manufactor) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
         this.manufactor = manufactor;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

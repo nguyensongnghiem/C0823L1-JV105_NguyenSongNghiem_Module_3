@@ -12,4 +12,13 @@ public class ManufactorService implements  IManufactorService{
     public List<Manufactor> getAll() {
         return manufactorRepository.findAll();
     }
+
+    @Override
+    public boolean save(Manufactor manufactor) {
+        return manufactorRepository.save(manufactor);
+    }
+
+    public Manufactor findByName(String name) {
+        return manufactorRepository.findByName(name);
+    }
 }

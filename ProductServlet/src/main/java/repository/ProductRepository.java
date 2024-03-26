@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ProductRepository implements IProductRepository {
     private final static String GET_ALL = "SELECT * FROM product";
-    private final static String GET_ALL_DTO = "select product.name, price,description, manufactor.name as manufactor\n" +
+    private final static String GET_ALL_DTO = "select product.id, product.name, price,description, manufactor.name as manufactor\n" +
             "from product \n" +
             "join manufactor on manufactor.id = product.manufactor;";
     private final static String DELETE_BY_ID = "DELETE FROM product WHERE id = ?";
