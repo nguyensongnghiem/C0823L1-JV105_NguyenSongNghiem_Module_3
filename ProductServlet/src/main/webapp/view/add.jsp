@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: nghie
@@ -22,11 +23,11 @@
 <div class="container">
     <form novalidate action="/product?action=add" method="post" class="w-50 ms-5">
         <h2>Thêm sản phẩm</h2>
+<%--        <div class="form-floating mb-3">--%>
+<%--            <input type="text" id="id" name="id" class="form-control" placeholder="Nhập Id" required>--%>
+<%--            <label for="id">ID sản phẩm</label>--%>
+<%--        </div>--%>
         <div class="form-floating mb-3">
-            <input type="text" id="id" name="id" class="form-control" placeholder="Nhập Id" required>
-            <label for="id">ID sản phẩm</label>
-        </div>
-        <div class="form-floating mb-3" >
             <input type="text" id="name" name="name" class="form-control" placeholder="Nhập tên" required>
             <label for="name" class="form-label">Tên sản phầm</label>
         </div>
@@ -34,20 +35,25 @@
             <input type="text" id="price" name="price" class="form-control" placeholder="Nhập giá" required>
             <label for="price" class="form-label">Giá</label>
         </div>
-        <div class="form-floating mb-3" >
+        <div class="form-floating mb-3">
             <input type="text" id="desc" name="desc" class="form-control" placeholder="Mô tả" required>
             <label for="desc" class="">Mô tả</label>
         </div>
-        <div class="form-floating mb-3">
-            <input type="text" id="manufactor" name="manufactor" class="form-control" placeholder="Nhà SX" required>
+        <div class="mb-3">
             <label for="manufactor" class="form-label">Hãng sản xuất</label>
+            <select name="manufactor" id="manufactor" value="">
+                <c:forEach var="manufactor" items="${manufactors}">
+                    <option value="${manufactor.getId()}">${manufactor.getName()}</option>
+                </c:forEach>
+                -- Chọn Nhà sản xuất --
+            </select>
         </div>
         <button class="btn btn-success" type="submit">Thêm mới</button>
     </form>
 </div>
 <script>
     const form = document.querySelector("form");
-    form.addEventListener("submit", e =>{
+    form.addEventListener("submit", e => {
         if (!form.checkValidity()) {
             e.preventDefault();
         }

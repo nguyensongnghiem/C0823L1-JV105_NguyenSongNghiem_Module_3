@@ -46,19 +46,32 @@ public class ProductServlet extends HttpServlet {
         }
     }
 
-    private void search(HttpServletRequest req, HttpServletResponse resp) {
-
+    private void search(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String searchName = req.getParameter("searchName");
+        int  searchManufactor = Integer.parseInt(req.getParameter("searchManufactor"));
+        System.out.println(searchName + searchManufactor);
+        List<ProductDto> products = productService.search(searchName,searchManufactor);
+        req.setAttribute("products", products);
+        List<Manufactor> manufactors = manufactorService.getAll();
+        req.setAttribute("manufactors", manufactors);
+        RequestDispatcher rd = req.getRequestDispatcher("/view/list.jsp");
+        rd.forward(req, resp);
     }
 
     private void showEditForm(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         int editId = Integer.parseInt(req.getParameter("editId"));
         Product product = productService.findById(editId);
         req.setAttribute("product", product);
+        List<Manufactor> manufactors = manufactorService.getAll();
+        req.setAttribute("manufactors", manufactors);
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/view/edit.jsp");
         requestDispatcher.forward(req,resp);
     }
-    private void showAddForm(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.sendRedirect("/view/add.jsp");
+    private void showAddForm(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        List<Manufactor> manufactors = manufactorService.getAll();
+        req.setAttribute("manufactors", manufactors);
+        RequestDispatcher rd = req.getRequestDispatcher("/view/add.jsp");
+        rd.forward(req,resp);
     }
 
     @Override
@@ -72,7 +85,7 @@ public class ProductServlet extends HttpServlet {
             case "delete":
                 deleteById(req, resp);
                 break;
-            case "edit":
+            case "update":
                 update(req, resp);
                 break;
             case "search":
@@ -86,40 +99,38 @@ public class ProductServlet extends HttpServlet {
         }
     }
 
-    private boolean update(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        String name = req.getParameter("name");
-        float price = Float.parseFloat(req.getParameter("price"));
-        String desc = req.getParameter("desc");
-        String manufactorName = req.getParameter("manufactor");
-        if (manufactorService.findByName(manufactorName)== null) {
-            Manufactor manufactor = new Manufactor();
-            manufactor.setId(null);
-            manufactorService.save(manufactorName);
-        }
-        else
-
-
-        resp.sendRedirect("/product?action=list");
-        return productService.update(new Product(id, name, price, desc, manufactor));
-    }
-
-    private void showList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<ProductDto> products = productService.findAllDto();
-        req.setAttribute("products", products);
-        RequestDispatcher rd = req.getRequestDispatcher("/view/list.jsp");
-        rd.forward(req, resp);
-    }
-
-    private void add(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void update(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         int id = Integer.parseInt(req.getParameter("id"));
         String name = req.getParameter("name");
         float price = Float.parseFloat(req.getParameter("price"));
         String desc = req.getParameter("desc");
         int manufactor = Integer.parseInt(req.getParameter("manufactor"));
-        boolean isOk = productService.add(new Product(id, name, price, desc, manufactor));
+
+        boolean isOk = productService.update(new Product(id, name, price, desc, manufactor));
         String message = isOk?"OK":"NOK";
-        resp.sendRedirect("/product?action=list&addMess="+message);
+        resp.sendRedirect("/product?action=list&mess="+message);
+
+    }
+
+    private void showList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<ProductDto> products = productService.findAllDto();
+        req.setAttribute("products", products);
+        List<Manufactor> manufactors = manufactorService.getAll();
+        req.setAttribute("manufactors", manufactors);
+        RequestDispatcher rd = req.getRequestDispatcher("/view/list.jsp");
+        rd.forward(req, resp);
+    }
+
+    private void add(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+//        int id = Integer.parseInt(req.getParameter("id"));
+        String name = req.getParameter("name");
+        float price = Float.parseFloat(req.getParameter("price"));
+        String desc = req.getParameter("desc");
+        int manufactor = Integer.parseInt(req.getParameter("manufactor"));
+
+        boolean isOk = productService.add(new Product(name, price, desc, manufactor));
+        String message = isOk?"OK":"NOK";
+        resp.sendRedirect("/product?action=list&mess="+message);
     }
     private boolean deleteById(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 //        System.out.println(req.getParameter("deleteId"));

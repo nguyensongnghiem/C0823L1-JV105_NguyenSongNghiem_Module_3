@@ -26,27 +26,29 @@
 <div class="container">
 
     <h1>Danh mục sản phẩm</h1>
-    <c:if test="${param.addMess=='OK'}">
-        <h2>Thêm mới thành công !</h2>
+    <c:if test="${param.mess=='OK'}">
+        <h2>Thành công !</h2>
     </c:if>
-    <c:if test="${param.addMess=='NOK'}">
-        <h2>Thêm mới thất bại !</h2>
+    <c:if test="${param.mess=='NOK'}">
+        <h2>Thất bại !</h2>
     </c:if>
     <a href="/product?action=add" class="btn btn-primary mb-3">Thêm mới</a>
 
     <form action="/product?action=search" method="post">
-             <div class="input-group">
-                <span class="input-group-text mb-3">Tên sản phẩm</span>
-                <input type="text" class="form-control mb-3 " id="search" name="name-search" placeholder="Tìm tên sản phầm">
-            </div>
-                <label class="input-group-label mb-3">Chọn nhà sản xuất</label>
-                <select name="manufactor-search" class="form-select mb-3">
-                    <option value="">--Tất cả--</option>
-                    <option value="Honda">2</option>
-                    <option value="Mèo">2</option>
-                    Chọn hãng SX
-                </select>
-            <button type="submit" class="btn btn-primary ">Tìm kiếm</button>
+        <div class="input-group">
+            <span class="input-group-text mb-3">Tên sản phẩm</span>
+            <input type="text" class="form-control mb-3 " id="search" name="searchName" placeholder="Tìm tên sản phầm">
+        </div>
+        <div class="mb-3">
+            <label for="manufactor" class="form-label">Chọn hãng sản xuất</label>
+            <select name="searchManufactor" id="manufactor" value="">
+                <c:forEach var="manufactor" items="${manufactors}">
+                    <option value="${manufactor.getId()}">${manufactor.getName()}</option>
+                </c:forEach>
+                -- Chọn Nhà sản xuất --
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary ">Tìm kiếm</button>
     </form>
 
     <table class="table ">
@@ -75,7 +77,8 @@
                 </td>
 
                 <td>
-                    <button onclick="deleteInfo('${product.id}','${product.name}')" type="button" class="btn btn-danger btn-sm"
+                    <button onclick="deleteInfo('${product.id}','${product.name}')" type="button"
+                            class="btn btn-danger btn-sm"
                             data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                         Xóa
                     </button>

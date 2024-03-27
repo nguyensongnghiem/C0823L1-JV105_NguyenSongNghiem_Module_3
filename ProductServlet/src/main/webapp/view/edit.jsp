@@ -21,7 +21,7 @@
 
 <body>
 <div class="container">
-    <form action="/product?action=edit" method="post" class="w-50 ms-5">
+    <form action="/product?action=update" method="post" class="w-50 ms-5">
         <h2>Sửa thông tin sản phẩm</h2>
         <div class="form-floating mb-3">
             <input type="text" id="id" name="id" class="form-control" placeholder="Nhập Id" value="${product.getId()}"
@@ -43,10 +43,14 @@
                    value="${product.getDescription()}" required>
             <label for="desc" class="">Mô tả</label>
         </div>
-        <div class="form-floating mb-3">
-            <input type="text" id="manufactor" name="manufactor" class="form-control" placeholder="Nhà SX"
-                   value="${product.getManufactor()}" required>
+        <div class="mb-3">
             <label for="manufactor" class="form-label">Hãng sản xuất</label>
+            <select name="manufactor" id="manufactor" value="">
+                <c:forEach var="manufactor" items="${manufactors}">
+                    <option value="${manufactor.getId()}">${manufactor.getName()}</option>
+                </c:forEach>
+                -- Chọn Nhà sản xuất --
+            </select>
         </div>
         <button class="btn btn-success" type="submit">Cập nhật</button>
     </form>

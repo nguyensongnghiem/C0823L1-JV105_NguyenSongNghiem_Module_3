@@ -20,7 +20,7 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public List<Product> search(String name, String manufactor) {
+    public List<ProductDto> search(String name, int manufactor) {
         return productRepository.search(name, manufactor);
     }
 

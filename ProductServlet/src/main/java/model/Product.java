@@ -17,6 +17,12 @@ public class Product {
         this.description = description;
         this.manufactor = manufactor;
     }
+    public Product( String name, float price, String description, int manufactor) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.manufactor = manufactor;
+    }
 
     public int getId() {
         return id;

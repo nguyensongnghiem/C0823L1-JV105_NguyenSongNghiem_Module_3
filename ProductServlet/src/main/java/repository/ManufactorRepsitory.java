@@ -2,17 +2,16 @@ package repository;
 
 import model.Manufactor;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ManufactorRepsitory implements IManufactorRepository {
     private final static String GET_ALL = "SELECT * FROM manufactor";
     private final static String FIND_BY_NAME = "SELECT * FROM ? WHERE name=?";
-    private final static String SAVE = "INSERT INTO manufactor(id,name) VALUE (?,?)";
+    private final static String SAVE = "INSERT INTO manufactor(name) VALUE (?)";
+    private final static String LAST_INSERT_ID = "LAST_INSERT_ID()";
+
 
     @Override
     public List<Manufactor> findAll() {
@@ -74,8 +73,7 @@ public class ManufactorRepsitory implements IManufactorRepository {
         }
         try {
             PreparedStatement preparedStatement =  conn.prepareStatement(SAVE);
-            preparedStatement.setInt(1, "null");
-            preparedStatement.setString(2, manufactor.getName());
+            preparedStatement.setString(1, manufactor.getName());
             rowEffected = preparedStatement.executeUpdate();
         } catch (SQLException e) {
             return false;
