@@ -24,7 +24,7 @@ public class ProductRepository implements IProductRepository {
     private final static String SEARCH_DTO = "SELECT product.id, product.name, price,description, manufactor.name AS manufactor\n" +
             "FROM product\n" +
             "JOIN manufactor ON manufactor.id = product.manufactor\n" +
-            "WHERE product.name like concat('%',?,'%') and manufactor.id = ?;";
+            "WHERE product.name like concat('%',?,'%') and manufactor.name like concat('%',?,'%');";
     @Override
     public List<Product> findAll() {
         List<Product> productList = new ArrayList<>();
@@ -195,7 +195,7 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public List<ProductDto> search(String name, int manufactor) {
+    public List<ProductDto> search(String name, String manufactor) {
         List<ProductDto> foundProducts = new ArrayList<>();
         Connection conn = null;
         try {
@@ -206,7 +206,7 @@ public class ProductRepository implements IProductRepository {
         try {
             PreparedStatement preparedStatement =  conn.prepareStatement(SEARCH_DTO);
             preparedStatement.setString(1, name);
-            preparedStatement.setInt(2, manufactor);
+            preparedStatement.setString(2, manufactor);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int foundId = resultSet.getInt("id");

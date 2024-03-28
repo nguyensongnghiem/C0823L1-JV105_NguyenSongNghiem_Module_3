@@ -33,22 +33,29 @@
         <h2>Thất bại !</h2>
     </c:if>
     <a href="/product?action=add" class="btn btn-primary mb-3">Thêm mới</a>
+    <br>
 
     <form action="/product?action=search" method="post">
-        <div class="input-group">
-            <span class="input-group-text mb-3">Tên sản phẩm</span>
-            <input type="text" class="form-control mb-3 " id="search" name="searchName" placeholder="Tìm tên sản phầm">
+        <div class="d-flex flex-wrap">
+            <div style="margin-bottom: 5px">
+                <button type="submit" class="btn btn-info">Tìm kiếm</button>
+            </div>
+            <div class="input-group" style="margin-bottom: 5px">
+                <span class="input-group-text mb-3">Tìm tên sản phẩm</span>
+                <input type="text" class="form-control mb-3 " id="search" name="searchName"
+                       placeholder="nhập tên sản phầm...">
+            </div>
+            <div class="mb-3 d-flex flex-nowrap " style="margin-bottom: 5px">
+                <label for="manufactor" class="form-label">Chọn hãng sản xuất</label>
+                <select class="form-select" name="searchManufactor" id="manufactor" value="">
+                    <option value="">- Tất cả nhà sản xuất -</option>
+                    <c:forEach var="manufactor" items="${manufactors}">
+                        <option value="${manufactor.getName()}">${manufactor.getName()}</option>
+                    </c:forEach>
+                </select>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="manufactor" class="form-label">Chọn hãng sản xuất</label>
-            <select name="searchManufactor" id="manufactor" value="">
-                <c:forEach var="manufactor" items="${manufactors}">
-                    <option value="${manufactor.getId()}">${manufactor.getName()}</option>
-                </c:forEach>
-                -- Chọn Nhà sản xuất --
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary ">Tìm kiếm</button>
+
     </form>
 
     <table class="table ">

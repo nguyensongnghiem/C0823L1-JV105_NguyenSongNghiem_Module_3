@@ -48,7 +48,7 @@ public class ProductServlet extends HttpServlet {
 
     private void search(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String searchName = req.getParameter("searchName");
-        int  searchManufactor = Integer.parseInt(req.getParameter("searchManufactor"));
+        String searchManufactor = req.getParameter("searchManufactor");
         System.out.println(searchName + searchManufactor);
         List<ProductDto> products = productService.search(searchName,searchManufactor);
         req.setAttribute("products", products);

@@ -20,5 +20,5 @@ public interface IProductRepository {
     public boolean update(Product product);
 
 
-    List<ProductDto> search(String name, int manufactor);
+    List<ProductDto> search(String name, String manufactor);
 }
